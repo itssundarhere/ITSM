@@ -1,0 +1,63 @@
+List allColumnsToBeFetched=[]
+List columnsToBeWrittenFile1=[]
+List columnsToBeWrittenFile2=[]
+List columnsToBeWrittenFile3=[]
+
+positionOfHeader=[:]
+
+List data=[]
+
+FileInputStream fis = new FileInputStream(new File("input.xlsx"));
+      
+      XSSFWorkbook workbook = new XSSFWorkbook(fis);
+      XSSFSheet spreadsheet = workbook.getSheetAt(0);			
+      Iterator < Row >  rowIterator = spreadsheet.iterator();
+      
+      while (rowIterator.hasNext()) {
+			def index=0
+			row = (XSSFRow) rowIterator.next();
+			Iterator < Cell >  cellIterator = row.cellIterator();
+         
+         while ( cellIterator.hasNext()) {
+            Cell cell = cellIterator.next();
+			allColumnsToBeFetched.each
+			{
+				column->
+				if(column == cell.value())
+				{
+					positionOfHeader.put(column,index)
+					index++
+				}
+				else
+				{
+					index++
+				}
+			}
+		}
+			break;
+	  }
+	  
+	  while (rowIterator.hasNext())
+	  {
+			row = (XSSFRow) rowIterator.next();
+			def tempMap=[:]
+			positionOfHeader.each
+			{
+				entry->
+				tempMap.put(entry.getKey(),row.get(entry.getValue()))
+			}
+			data.add(tempMap)
+	  }
+	  
+	  columnsToBeWrittenFile1.each
+	  {
+			column->
+			def row=[]
+			data.each
+			{
+				d->
+				//perform the manipulations if any
+				row.add(d.get(column))
+			}
+			//write row to output file
+	  }
